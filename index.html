@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de cadastro e acompanhamento de obras e vistorias.">
+  <title>ObraCheck | Gestão de Vistorias</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#painel" aria-label="ObraCheck início">
+      <span class="brand-mark">OC</span>
+      <span><strong>ObraCheck</strong><small>GESTÃO DE VISTORIAS</small></span>
+    </a>
+    <nav class="nav-menu" aria-label="Menu principal">
+      <a class="nav-link active" href="#painel" data-view="painel"><span>▦</span> Painel geral</a>
+      <a class="nav-link" href="#obras" data-view="obras"><span>▤</span> Obras cadastradas</a>
+      <a class="nav-link" href="#vistorias" data-view="vistorias"><span>✓</span> Vistorias</a>
+      <a class="nav-link" href="#relatorios" data-view="relatorios"><span>▥</span> Relatórios</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card">
+        <span class="help-icon">i</span>
+        <strong>Organize suas obras</strong>
+        <p>Cadastre projetos e acompanhe cada vistoria em um só lugar.</p>
+      </div>
+      <p class="local-note"><span class="status-dot"></span> Dados salvos neste navegador</p>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">GESTÃO DE CONSTRUÇÃO</p>
+        <h1 id="page-title">Painel geral</h1>
+      </div>
+      <div class="topbar-actions">
+        <span class="today-label" id="today-label"></span>
+        <button class="button button-primary" id="quick-add-btn" type="button">＋ Nova obra</button>
+      </div>
+    </header>
+
+    <section class="view active-view" id="view-painel">
+      <div class="welcome-banner">
+        <div>
+          <p class="banner-kicker">CONTROLE E ORGANIZAÇÃO</p>
+          <h2>Suas obras, em um só lugar.</h2>
+          <p>Acompanhe os cadastros, registre vistorias e mantenha o histórico organizado.</p>
+          <button class="button button-light" id="banner-add-btn" type="button">Cadastrar uma obra <span>→</span></button>
+        </div>
+        <div class="banner-illustration" aria-hidden="true">
+          <div class="building building-back"></div>
+          <div class="building building-front"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="sun"></div>
+          <div class="check-bubble">✓</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-icon icon-blue">▤</div><p>Total de obras</p><strong id="stat-total">0</strong><small>Obras cadastradas</small></article>
+        <article class="stat-card"><div class="stat-icon icon-green">✓</div><p>Em andamento</p><strong id="stat-progress">0</strong><small>Projetos ativos</small></article>
+        <article class="stat-card"><div class="stat-icon icon-orange">◷</div><p>Vistorias registradas</p><strong id="stat-inspections">0</strong><small>Registros no sistema</small></article>
+        <article class="stat-card"><div class="stat-icon icon-purple">▣</div><p>Concluídas</p><strong id="stat-complete">0</strong><small>Obras finalizadas</small></article>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel recent-panel">
+          <div class="panel-heading"><div><h3>Obras recentes</h3><p>Últimos projetos adicionados ao sistema</p></div><button class="text-button" data-go="obras" type="button">Ver todas →</button></div>
+          <div id="recent-projects" class="table-wrap"></div>
+        </section>
+        <section class="panel shortcuts-panel">
+          <div class="panel-heading"><div><h3>Acesso rápido</h3><p>Atalhos para tarefas comuns</p></div></div>
+          <button class="shortcut" id="shortcut-inspection" type="button"><span class="shortcut-icon shortcut-blue">＋</span><span><strong>Registrar vistoria</strong><small>Adicione uma nova inspeção</small></span><b>→</b></button>
+          <button class="shortcut" data-go="obras" type="button"><span class="shortcut-icon shortcut-orange">▤</span><span><strong>Consultar obras</strong><small>Veja os dados dos projetos</small></span><b>→</b></button>
+          <button class="shortcut" data-go="relatorios" type="button"><span class="shortcut-icon shortcut-purple">▥</span><span><strong>Gerar relatório</strong><small>Imprima ou salve em PDF</small></span><b>→</b></button>
+        </section>
+      </div>
+      <p class="privacy-notice">Importante: esta versão salva os dados apenas neste navegador e computador. Exporte uma cópia de segurança regularmente.</p>
+    </section>
+
+    <section class="view" id="view-obras">
+      <div class="section-toolbar"><div><h2>Obras cadastradas</h2><p>Cadastre e acompanhe as informações de cada obra.</p></div><button class="button button-primary" id="add-project-btn" type="button">＋ Cadastrar obra</button></div>
+      <div class="filters-row"><label class="search-box"><span>⌕</span><input id="project-search" type="search" placeholder="Buscar por nome, endereço ou responsável..."></label><select id="project-status-filter" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option>Em andamento</option><option>Planejada</option><option>Concluída</option><option>Paralisada</option></select></div>
+      <div id="projects-list" class="projects-grid"></div>
+    </section>
+
+    <section class="view" id="view-vistorias">
+      <div class="section-toolbar"><div><h2>Registro de vistorias</h2><p>Consulte inspeções e registre novas observações.</p></div><button class="button button-primary" id="add-inspection-btn" type="button">＋ Nova vistoria</button></div>
+      <div class="filters-row"><label class="search-box"><span>⌕</span><input id="inspection-search" type="search" placeholder="Buscar por obra, vistoriador ou observação..."></label></div>
+      <div class="panel"><div id="inspections-list" class="table-wrap"></div></div>
+    </section>
+
+    <section class="view" id="view-relatorios">
+      <div class="section-toolbar"><div><h2>Relatórios e dados</h2><p>Consulte um resumo ou exporte seus registros.</p></div><button class="button button-primary" id="print-report-btn" type="button">Imprimir relatório</button></div>
+      <div class="report-summary" id="report-summary"></div>
+      <div class="panel export-panel"><div><h3>Backup dos dados</h3><p>Baixe um arquivo JSON com as obras e vistorias para guardar uma cópia de segurança.</p></div><button class="button button-outline" id="export-btn" type="button">↓ Exportar backup</button></div>
+      <div class="panel export-panel"><div><h3>Restaurar backup</h3><p>Importe um backup JSON criado por este sistema. Os dados atuais serão substituídos.</p></div><label class="button button-outline file-button">↑ Importar backup<input type="file" id="import-file" accept=".json,application/json" hidden></label></div>
+      <p class="privacy-notice">Os relatórios usam os dados cadastrados neste navegador. Para salvar em PDF, escolha “Salvar como PDF” na janela de impressão.</p>
+    </section>
+  </main>
+
+  <dialog id="project-dialog" class="modal">
+    <form id="project-form" class="modal-form">
+      <div class="modal-heading"><div><p class="eyebrow">DADOS DO PROJETO</p><h2 id="project-modal-title">Cadastrar obra</h2></div><button type="button" class="icon-button" data-close="project-dialog" aria-label="Fechar">×</button></div>
+      <input type="hidden" id="project-id">
+      <div class="form-grid">
+        <label class="field field-full">Nome da obra *<input id="project-name" required maxlength="100" placeholder="Ex.: Residencial Jardim"></label>
+        <label class="field field-full">Endereço da obra<input id="project-address" maxlength="180" placeholder="Rua, número, cidade"></label>
+        <label class="field">Responsável<input id="project-manager" maxlength="100" placeholder="Nome do responsável"></label>
+        <label class="field">Data de início *<input id="project-start" type="date" required></label>
+        <label class="field">Previsão de conclusão<input id="project-end" type="date"></label>
+        <label class="field">Situação<select id="project-status"><option>Em andamento</option><option>Planejada</option><option>Concluída</option><option>Paralisada</option></select></label>
+        <label class="field field-full">Descrição / observações<textarea id="project-notes" rows="3" maxlength="1000" placeholder="Informações importantes sobre a obra..."></textarea></label>
+      </div>
+      <p class="form-error" id="project-error" role="alert"></p>
+      <div class="modal-actions"><button type="button" class="button button-outline" data-close="project-dialog">Cancelar</button><button type="submit" class="button button-primary">Salvar obra</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="inspection-dialog" class="modal">
+    <form id="inspection-form" class="modal-form">
+      <div class="modal-heading"><div><p class="eyebrow">ACOMPANHAMENTO TÉCNICO</p><h2>Registrar vistoria</h2></div><button type="button" class="icon-button" data-close="inspection-dialog" aria-label="Fechar">×</button></div>
+      <div class="form-grid">
+        <label class="field field-full">Obra *<select id="inspection-project" required><option value="">Selecione uma obra</option></select></label>
+        <label class="field">Data da vistoria *<input id="inspection-date" type="date" required></label>
+        <label class="field">Vistoriador<input id="inspection-inspector" maxlength="100" placeholder="Nome do vistoriador"></label>
+        <label class="field">Resultado<select id="inspection-result"><option>Conforme</option><option>Com pendências</option><option>Requer nova vistoria</option></select></label>
+        <label class="field field-full">Observações *<textarea id="inspection-notes" rows="4" required maxlength="2000" placeholder="Descreva o que foi verificado e as observações..."></textarea></label>
+        <label class="field field-full">Fotos da vistoria <input id="inspection-photos" type="file" accept="image/*" multiple><small>Até 3 imagens por vistoria, com no máximo 1 MB cada. As imagens ficam neste navegador.</small></label>
+      </div>
+      <p class="form-error" id="inspection-error" role="alert"></p>
+      <div class="modal-actions"><button type="button" class="button button-outline" data-close="inspection-dialog">Cancelar</button><button type="submit" class="button button-primary">Salvar vistoria</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog" class="modal modal-wide">
+    <div class="modal-form">
+      <div class="modal-heading"><div><p class="eyebrow">DETALHES DO PROJETO</p><h2 id="detail-title">Detalhes da obra</h2></div><button type="button" class="icon-button" data-close="detail-dialog" aria-label="Fechar">×</button></div>
+      <div id="project-detail-content"></div>
+      <div class="modal-actions"><button type="button" class="button button-outline" data-close="detail-dialog">Fechar</button><button type="button" class="button button-primary" id="detail-add-inspection">＋ Registrar vistoria</button></div>
+    </div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
